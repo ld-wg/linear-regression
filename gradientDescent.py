@@ -13,6 +13,17 @@ def gradient_descent(X, y, theta, alpha, num_iters):
         #
         # Hint: X.shape = (97, 2), y.shape = (97, ), theta.shape = (2, )
 
+        # Calculate hypothesis
+        h = np.dot(X, theta)
+
+        # Calculate errors
+        errors = h - y
+
+        # Calculate gradient
+        gradient = (alpha / m) * np.dot(X.T, errors)
+
+        # Update theta
+        theta = theta - gradient
 
         # ===========================================================
         # Save the cost every iteration
@@ -31,6 +42,17 @@ def gradient_descent_multi(X, y, theta, alpha, num_iters):
         # Instructions : Perform a single gradient step on the parameter vector theta
         #
 
+        # Calculate hypothesis
+        h = np.dot(X, theta)
+
+        # Calculate errors
+        errors = h - y
+
+        # Calculate gradient
+        gradient = (alpha / m) * np.dot(X.T, errors)
+
+        # Update theta
+        theta = theta - gradient
 
         # ===========================================================
         # Save the cost every iteration

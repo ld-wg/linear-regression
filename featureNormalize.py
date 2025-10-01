@@ -25,7 +25,15 @@ def feature_normalize(X):
     #       To get the same result as Octave 'std', use np.std(X, 0, ddof=1)
     #
 
+    # Calculate mean for each feature (column)
+    mu = np.mean(X, axis=0)
 
+    # Calculate standard deviation for each feature (column)
+    # Use ddof=1 to match Octave's std function
+    sigma = np.std(X, axis=0, ddof=1)
+
+    # Normalize X by subtracting mean and dividing by standard deviation
+    X_norm = (X - mu) / sigma
 
     # ===========================================================
 
