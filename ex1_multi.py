@@ -3,6 +3,7 @@ import numpy as np
 from featureNormalize import *
 from gradientDescent import *
 from normalEqn import *
+from plotData import *
 
 plt.ion()
 
@@ -13,18 +14,18 @@ X = data[:, 0:2]
 y = data[:, 2]
 m = y.size
 
-# Print out some data points
+# print out some data points
 print('First 10 examples from the dataset: ')
 for i in range(0, 10):
     print('x = {}, y = {}'.format(X[i], y[i]))
 
 input('Program paused. Press ENTER to continue')
 
-# Scale features and set them to zero mean
+# scale features and set them to zero mean
 print('Normalizing Features ...')
 
 X, mu, sigma = feature_normalize(X)
-X = np.c_[np.ones(m), X]  # Add a column of ones to X
+X = np.c_[np.ones(m), X]  # add a column of ones to X
 
 # ===================== Part 2: Gradient Descent =====================
 
@@ -49,29 +50,32 @@ X = np.c_[np.ones(m), X]  # Add a column of ones to X
 
 print('Running gradient descent ...')
 
-# Choose some alpha value
+# choose some alpha value
 alpha = 0.03
 num_iters = 400
 
-# Init theta and Run Gradient Descent
+# init theta and run gradient descent
 theta = np.zeros(3)
-theta, J_history = gradient_descent_multi(X, y, theta, alpha, num_iters)
+theta, J_history = gradient_descent(X, y, theta, alpha, num_iters)
 
-# Plot the convergence graph
-plt.figure()
-plt.plot(np.arange(J_history.size), J_history)
-plt.xlabel('Number of iterations')
-plt.ylabel('Cost J')
+# plot the convergence graph
+plot_convergence(J_history)
 
-# Display gradient descent's result
+# display gradient descent's result
 print('Theta computed from gradient descent : \n{}'.format(theta))
 
 # Estimate the price of a 1650 sq-ft, 3 br house
 # ===================== Your Code Here =====================
 # Recall that the first column of X is all-ones. Thus, it does
 # not need to be normalized.
-price = 0  # You should change this
 
+# first, normalize the features for the test house
+# (using the same mu and sigma calculated earlier)
+test_house = np.array([1650, 3])
+test_house_norm = (test_house - mu) / sigma
+test_house_norm = np.insert(test_house_norm, 0, 1)  # Add intercept term
+
+price = np.dot(test_house_norm, theta)
 
 # ==========================================================
 
@@ -93,24 +97,29 @@ print('Solving with normal equations ...')
 #                to predict the price of a 1650 sq-ft, 3 br house.
 #
 
-# Load data
+# load data
 data = np.loadtxt('ex1data2.txt', delimiter=',', dtype=np.int64)
 X = data[:, 0:2]
 y = data[:, 2]
 m = y.size
 
-# Add intercept term to X
+# add intercept term to X
 X = np.c_[np.ones(m), X]
 
 theta = normal_eqn(X, y)
 
-# Display normal equation's result
+# display normal equation's result
 print('Theta computed from the normal equations : \n{}'.format(theta))
 
 # Estimate the price of a 1650 sq-ft, 3 br house
 # ===================== Your Code Here =====================
-price = 0  # You should change this
 
+# for normal equations, use the original (unnormalized) features
+# since theta was calculated using the original features
+test_house = np.array([1650, 3])
+test_house = np.insert(test_house, 0, 1)  # Add intercept term (no normalization)
+
+price = np.dot(test_house, theta)
 
 # ==========================================================
 

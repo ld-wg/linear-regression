@@ -1,10 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib.colors import LogNorm
-from mpl_toolkits.mplot3d import axes3d, Axes3D
-from computeCost import *
-from gradientDescent import *
-from plotData import *
+from computeCost import compute_cost
+from gradientDescent import gradient_descent
+from plotData import plot_data, plot_linear_fit, plot_cost_surface, plot_cost_contour
 
 # ===================== Part 1: Plotting =====================
 print('Plotting Data...')
@@ -22,24 +20,23 @@ input('Program paused. Press ENTER to continue')
 # ===================== Part 2: Gradient descent =====================
 print('Running Gradient Descent...')
 
-X = np.c_[np.ones(m), X]  # Add a column of ones to X
+X = np.c_[np.ones(m), X]  # add a column of ones to X
 theta = np.zeros(2)  # initialize fitting parameters
 
-# Some gradient descent settings
+# some gradient descent settings
 iterations = 1500
 alpha = 0.01
 
-# Compute and display initial cost
+# compute and display initial cost
 print('Initial cost : ' + str(compute_cost(X, y, theta)) + ' (This value should be about 32.07)')
 
 theta, J_history = gradient_descent(X, y, theta, alpha, iterations)
 
 print('Theta found by gradient descent: ' + str(theta.reshape(2)))
 
-# Plot the linear fit
+# plot the linear fit
 plt.figure(0)
-line1, = plt.plot(X[:, 1], np.dot(X, theta), label='Linear Regression')
-plt.legend(handles=[line1])
+plot_linear_fit(X[:, 1], y, theta)
 
 input('Program paused. Press ENTER to continue')
 
@@ -54,29 +51,27 @@ input('Program paused. Press ENTER to continue')
 # ===================== Part 3: Visualizing J(theta0, theta1) =====================
 print('Visualizing J(theta0, theta1) ...')
 
+# create grid of theta values for cost surface visualization
 theta0_vals = np.linspace(-10, 10, 100)
 theta1_vals = np.linspace(-1, 4, 100)
 
+# create meshgrid for 3D surface plot
 xs, ys = np.meshgrid(theta0_vals, theta1_vals)
 J_vals = np.zeros(xs.shape)
 
-# Fill out J_vals
+# calculate cost for each theta combination
 for i in range(0, theta0_vals.size):
     for j in range(0, theta1_vals.size):
         t = np.array([theta0_vals[i], theta1_vals[j]])
         J_vals[i][j] = compute_cost(X, y, t)
 
+# transpose for correct orientation in plots
 J_vals = np.transpose(J_vals)
 
-fig1 = plt.figure(1)
-ax = fig1.add_subplot(111, projection='3d')
-ax.plot_surface(xs, ys, J_vals)
-plt.xlabel(r'$\theta_0$')
-plt.ylabel(r'$\theta_1$')
+# plot 3D surface
+plot_cost_surface(theta0_vals, theta1_vals, J_vals, theta_optimal=theta)
 
-plt.figure(2)
-lvls = np.logspace(-2, 3, 20)
-plt.contour(xs, ys, J_vals, levels=lvls, norm=LogNorm())
-plt.plot(theta[0], theta[1], c='r', marker="x")
+# plot contour
+plot_cost_contour(theta0_vals, theta1_vals, J_vals, theta_optimal=theta, log_scale=True)
 
 input('ex1 Finished. Press ENTER to exit')

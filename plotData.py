@@ -1,20 +1,54 @@
 import matplotlib.pyplot as plt
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.colors import LogNorm
 
 
 def plot_data(x, y):
-    # ===================== Your Code Here =====================
-    # Instructions : Plot the training data into a figure using the matplotlib.pyplot
-    #                using the "plt.scatter" function. Set the axis labels using
-    #                "plt.xlabel" and "plt.ylabel". Assume the population and revenue data
-    #                have been passed in as the x and y.
+    """Plot training data as scatter plot."""
+    plt.scatter(x, y, marker='x', c='r', s=50)
+    plt.grid(True, alpha=0.3)
 
-    # Hint : You can use the 'marker' parameter in the "plt.scatter" function to change the marker type (e.g. "x", "o").
-    #        Furthermore, you can change the color of markers with 'c' parameter.
 
-    plt.scatter(x, y, marker='x', c='r', s=100)
-    plt.ylabel('Profit in $10,000s')
-    plt.xlabel('Population of City in 10,000s')
+def plot_linear_fit(x, y, theta):
+    """Plot data points and linear regression fit."""
+    plot_data(x, y)
 
-    # ===========================================================
+    # Plot regression line
+    x_line = np.linspace(x.min(), x.max(), 100)
+    y_line = theta[0] + theta[1] * x_line
+    plt.plot(x_line, y_line, 'b-', linewidth=2)
 
-    plt.show()
+
+def plot_cost_surface(theta0_vals, theta1_vals, J_vals):
+    """Plot 3D surface of cost function J(theta0, theta1)."""
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    theta0_grid, theta1_grid = np.meshgrid(theta0_vals, theta1_vals)
+    ax.plot_surface(theta0_grid, theta1_grid, J_vals, alpha=0.8)
+
+    ax.set_xlabel(r'$\theta_0$')
+    ax.set_ylabel(r'$\theta_1$')
+    ax.set_zlabel(r'J($\theta$)')
+
+
+def plot_cost_contour(theta0_vals, theta1_vals, J_vals):
+    """Plot contour plot of cost function J(theta0, theta1)."""
+    plt.figure()
+
+    theta0_grid, theta1_grid = np.meshgrid(theta0_vals, theta1_vals)
+    cs = plt.contour(theta0_grid, theta1_grid, J_vals, levels=20)
+
+    plt.xlabel(r'$\theta_0$')
+    plt.ylabel(r'$\theta_1$')
+    plt.grid(True, alpha=0.3)
+    plt.colorbar(cs)
+
+
+def plot_convergence(J_history):
+    """Plot convergence of cost function over iterations."""
+    plt.plot(range(len(J_history)), J_history, 'b-', linewidth=2)
+    plt.xlabel('Number of iterations')
+    plt.ylabel('Cost J')
+    plt.grid(True, alpha=0.3)

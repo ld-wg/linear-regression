@@ -1,62 +1,26 @@
 import numpy as np
-from computeCost import *
+from typing import Tuple
+from computeCost import compute_cost
 
 
-def gradient_descent(X, y, theta, alpha, num_iters):
-    # Initialize some useful values
+def gradient_descent(X: np.ndarray, y: np.ndarray, theta: np.ndarray, alpha: float, num_iters: int) -> Tuple[np.ndarray, np.ndarray]:
     m = y.size
     J_history = np.zeros(num_iters)
 
     for i in range(0, num_iters):
-        # ===================== Your Code Here =====================
-        # Instructions : Perform a single gradient step on the parameter vector theta
-        #
-        # Hint: X.shape = (97, 2), y.shape = (97, ), theta.shape = (2, )
 
-        # Calculate hypothesis
+        # hypothesis
         h = np.dot(X, theta)
 
-        # Calculate errors
         errors = h - y
 
-        # Calculate gradient
+        # calculate gradient
         gradient = (alpha / m) * np.dot(X.T, errors)
 
-        # Update theta
+        # update theta
         theta = theta - gradient
 
-        # ===========================================================
-        # Save the cost every iteration
+        # save the cost every iteration
         J_history[i] = compute_cost(X, y, theta)
 
     return theta, J_history
-
-
-def gradient_descent_multi(X, y, theta, alpha, num_iters):
-    # Initialize some useful values
-    m = y.size
-    J_history = np.zeros(num_iters)
-
-    for i in range(0, num_iters):
-        # ===================== Your Code Here =====================
-        # Instructions : Perform a single gradient step on the parameter vector theta
-        #
-
-        # Calculate hypothesis
-        h = np.dot(X, theta)
-
-        # Calculate errors
-        errors = h - y
-
-        # Calculate gradient
-        gradient = (alpha / m) * np.dot(X.T, errors)
-
-        # Update theta
-        theta = theta - gradient
-
-        # ===========================================================
-        # Save the cost every iteration
-        J_history[i] = compute_cost(X, y, theta)
-
-    return theta, J_history
-    
